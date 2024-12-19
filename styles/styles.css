@@ -1,0 +1,85 @@
+/* Estilos generales para el cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* Estilos del aside */
+aside {
+    width: 250px;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    height: 100vh;
+    position: fixed;
+}
+aside h2 {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+aside ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+aside ul li {
+    margin-bottom: 10px;
+}
+
+aside ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+aside ul li a:hover {
+    background-color: #575757;
+}
+
+/* Submenú de acciones */
+aside ul li ul {
+    padding-left: 20px;
+}
+
+aside ul li ul li a {
+    font-size: 14px;
+    padding-left: 15px;
+}
+
+aside ul li ul li a:hover {
+    background-color: #444;
+}
+
+/* Estilos para la pantalla principal */
+main {
+    margin-left: 250px; /* Para dar espacio al aside */
+    padding: 20px;
+    background-color: white;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+/* Títulos */
+h1, h2 {
+    color: #333;
+}
+
+
