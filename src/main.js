@@ -13,33 +13,63 @@ const limpiarMain = () => {
 // Función para generar el formulario de crear empleado
 const generarFormularioCrearEmpleado = () => {
     limpiarMain(); // Limpiar el contenido de <main> antes de mostrar el formulario
-    
-    const formulario = `
-        <h2>Crear Empleado</h2>
-        <form id="formCrearEmpleado">
-            <label for="nuevoNombre">Nombre:</label>
-            <input type="text" id="nuevoNombre" required>
 
-            <label for="nuevoPuesto">Puesto:</label>
-            <input type="text" id="nuevoPuesto" required>
+    // Crear los elementos del formulario dinámicamente
+    const formulario = document.createElement('form');
+    formulario.id = 'formCrearEmpleado';
 
-            <label for="nuevoSalario">Salario:</label>
-            <input type="number" id="nuevoSalario" required>
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Crear Empleado';
+    formulario.appendChild(titulo);
 
-            <button type="submit">Crear Empleado</button>
-        </form>
-    `;
-    
-    // Ahora agregamos el formulario al <main> directamente
-    document.querySelector('main').innerHTML = formulario;
+    const labelNombre = document.createElement('label');
+    labelNombre.setAttribute('for', 'nuevoNombre');
+    labelNombre.textContent = 'Nombre:';
+    formulario.appendChild(labelNombre);
+
+    const inputNombre = document.createElement('input');
+    inputNombre.type = 'text';
+    inputNombre.id = 'nuevoNombre';
+    inputNombre.required = true;
+    formulario.appendChild(inputNombre);
+
+    const labelPuesto = document.createElement('label');
+    labelPuesto.setAttribute('for', 'nuevoPuesto');
+    labelPuesto.textContent = 'Puesto:';
+    formulario.appendChild(labelPuesto);
+
+    const inputPuesto = document.createElement('input');
+    inputPuesto.type = 'text';
+    inputPuesto.id = 'nuevoPuesto';
+    inputPuesto.required = true;
+    formulario.appendChild(inputPuesto);
+
+    const labelSalario = document.createElement('label');
+    labelSalario.setAttribute('for', 'nuevoSalario');
+    labelSalario.textContent = 'Salario:';
+    formulario.appendChild(labelSalario);
+
+    const inputSalario = document.createElement('input');
+    inputSalario.type = 'number';
+    inputSalario.id = 'nuevoSalario';
+    inputSalario.required = true;
+    formulario.appendChild(inputSalario);
+
+    const buttonCrearEmpleado = document.createElement('button');
+    buttonCrearEmpleado.type = 'submit';
+    buttonCrearEmpleado.textContent = 'Crear Empleado';
+    formulario.appendChild(buttonCrearEmpleado);
+
+    // Agregar el formulario al <main>
+    document.querySelector('main').appendChild(formulario);
 
     // Asignar evento para crear el empleado
-    document.getElementById('formCrearEmpleado').addEventListener('submit', (event) => {
+    formulario.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const nombre = document.getElementById('nuevoNombre').value;
-        const puesto = document.getElementById('nuevoPuesto').value;
-        const salario = parseFloat(document.getElementById('nuevoSalario').value);
+        const nombre = inputNombre.value;
+        const puesto = inputPuesto.value;
+        const salario = parseFloat(inputSalario.value);
 
         if (nombre && puesto && salario) {
             // Llamar a la función para agregar un empleado (deberías tenerla importada)
@@ -49,20 +79,14 @@ const generarFormularioCrearEmpleado = () => {
             alert("Empleado creado correctamente.");
 
             // Reseteamos los campos sin eliminar el formulario
-            document.getElementById('formCrearEmpleado').reset();  // Esto resetea todos los campos del formulario
+            formulario.reset();  // Esto resetea todos los campos del formulario
         } else {
             alert("Por favor, completa todos los campos.");
         }
     });
 };
-
-// Función para cargar el formulario de crear empleado
-const cargarFormularioCrearEmpleado = () => {
-    generarFormularioCrearEmpleado();
-};
-
 // Evento para el botón de "Crear Empleado"
-document.getElementById('crearEmpleado').addEventListener('click', cargarFormularioCrearEmpleado);
+document.getElementById('crearEmpleado').addEventListener('click', generarFormularioCrearEmpleado);
 //------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
 //Funcion de mostrar empleado
@@ -70,29 +94,67 @@ document.getElementById('crearEmpleado').addEventListener('click', cargarFormula
 
 const mostrarEmpleados = () => {
     limpiarMain(); // Limpiar el contenido de main antes de mostrar los empleados
-    
+
     const empleados = obtenerEmpleados();
+
+    // Crear contenedor principal
     const contenedorEmpleados = document.createElement('div');
-    
+    contenedorEmpleados.classList.add('contenedor-tabla-empleados'); // Clase para estilos
+
+    // Crear título
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Lista de Empleados Registrados';
+    contenedorEmpleados.appendChild(titulo);
+
     if (empleados.length === 0) {
-        contenedorEmpleados.innerHTML = '<p>No hay empleados registrados.</p>';
+        const mensaje = document.createElement('p');
+        mensaje.textContent = 'No hay empleados registrados.';
+        contenedorEmpleados.appendChild(mensaje);
     } else {
-        const listaEmpleados = document.createElement('ul');
-        
-        empleados.forEach(empleado => {
-            const empleadoElemento = document.createElement('li');
-            empleadoElemento.textContent = `ID: ${empleado.id_empleado}, Nombre: ${empleado.nombre}, Puesto: ${empleado.puesto}, Salario: $${empleado.salario}`;
-            listaEmpleados.appendChild(empleadoElemento);
+        // Crear la tabla
+        const tabla = document.createElement('table');
+        tabla.classList.add('tabla-empleados'); // Clase para estilos
+
+        // Crear la cabecera de la tabla
+        const cabecera = document.createElement('thead');
+        const filaCabecera = document.createElement('tr');
+
+        // Encabezados de la tabla
+        const encabezados = ['ID', 'Nombre', 'Puesto', 'Salario'];
+        encabezados.forEach(encabezado => {
+            const th = document.createElement('th');
+            th.textContent = encabezado;
+            filaCabecera.appendChild(th);
         });
-        
-        contenedorEmpleados.appendChild(listaEmpleados);
+
+        cabecera.appendChild(filaCabecera);
+        tabla.appendChild(cabecera);
+
+        // Crear el cuerpo de la tabla
+        const cuerpo = document.createElement('tbody');
+
+        empleados.forEach(empleado => {
+            const fila = document.createElement('tr');
+
+            // Datos del empleado en cada fila
+            const columnas = ['id_empleado', 'nombre', 'puesto', 'salario'];
+            columnas.forEach(campo => {
+                const td = document.createElement('td');
+                td.textContent = empleado[campo];
+                fila.appendChild(td);
+            });
+
+            cuerpo.appendChild(fila);
+        });
+
+        tabla.appendChild(cuerpo);
+        contenedorEmpleados.appendChild(tabla);
     }
 
-    // Insertamos el contenedor de empleados en el main
+    // Insertar contenedor en el main
     document.querySelector('main').appendChild(contenedorEmpleados);
 };
-
-// Evento para mostrar los empleados cuando se haga clic en "Ver Empleados"
+// Asignar evento directamente
 document.getElementById('verEmpleados').addEventListener('click', mostrarEmpleados);
 //------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
@@ -101,23 +163,46 @@ document.getElementById('verEmpleados').addEventListener('click', mostrarEmplead
 const generarFormularioEliminarEmpleado = () => {
     limpiarMain(); // Limpiar todo el contenido de main antes de generar el formulario
 
-    const formularioEliminar = `
-        <h2>Eliminar Empleado</h2>
-        <label for="idEmpleadoEliminar">ID del Empleado:</label>
-        <input type="number" id="idEmpleadoEliminar" placeholder="Ingrese el ID del empleado a eliminar">
-        <button type="button" id="validarEliminarEmpleado">Validar y Eliminar</button>
-        <p id="mensajeEliminarEmpleado"></p> <!-- Para mostrar mensajes -->
-    `;
-
-    // Insertamos el formulario en el main
+    // Crear el contenedor principal del formulario
     const contenedorFormulario = document.createElement('div');
     contenedorFormulario.id = 'formularioEliminarEmpleado';
-    contenedorFormulario.innerHTML = formularioEliminar;
+
+    // Crear el título
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Eliminar Empleado';
+    contenedorFormulario.appendChild(titulo);
+
+    // Crear el label para el ID del empleado
+    const labelID = document.createElement('label');
+    labelID.setAttribute('for', 'idEmpleadoEliminar');
+    labelID.textContent = 'ID del Empleado:';
+    contenedorFormulario.appendChild(labelID);
+
+    // Crear el input para el ID del empleado
+    const inputID = document.createElement('input');
+    inputID.setAttribute('type', 'number');
+    inputID.id = 'idEmpleadoEliminar';
+    inputID.setAttribute('placeholder', 'Ingrese el ID del empleado a eliminar');
+    contenedorFormulario.appendChild(inputID);
+
+    // Crear el botón para validar y eliminar
+    const botonEliminar = document.createElement('button');
+    botonEliminar.setAttribute('type', 'button');
+    botonEliminar.id = 'validarEliminarEmpleado';
+    botonEliminar.textContent = 'Validar y Eliminar';
+    contenedorFormulario.appendChild(botonEliminar);
+
+    // Crear el párrafo para mostrar mensajes
+    const mensajeEliminar = document.createElement('p');
+    mensajeEliminar.id = 'mensajeEliminarEmpleado';
+    contenedorFormulario.appendChild(mensajeEliminar);
+
+    // Insertar el formulario en el <main>
     document.querySelector('main').appendChild(contenedorFormulario);
 
     // Evento para validar y eliminar el empleado
-    document.getElementById('validarEliminarEmpleado').addEventListener('click', () => {
-        const idEmpleado = parseInt(document.getElementById('idEmpleadoEliminar').value); // Obtenemos el ID ingresado
+    botonEliminar.addEventListener('click', () => {
+        const idEmpleado = parseInt(inputID.value); // Obtenemos el ID ingresado
         const empleados = obtenerEmpleados(); // Obtenemos todos los empleados
 
         // Validar si el empleado existe
@@ -132,17 +217,17 @@ const generarFormularioEliminarEmpleado = () => {
                 eliminarEmpleado(idEmpleado);
 
                 // Mostrar mensaje de éxito
-                document.getElementById('mensajeEliminarEmpleado').innerHTML = 'Empleado eliminado correctamente.';
-                
+                mensajeEliminar.textContent = 'Empleado eliminado correctamente.';
+
                 // Limpiar el formulario o ocultarlo después de eliminar
                 setTimeout(() => {
                     limpiarMain(); // Limpiamos todo el main después de 2 segundos
                 }, 2000); // Esperamos 2 segundos para mostrar el mensaje antes de limpiar el formulario
             } else {
-                document.getElementById('mensajeEliminarEmpleado').innerHTML = 'Eliminación cancelada.';
+                mensajeEliminar.textContent = 'Eliminación cancelada.';
             }
         } else {
-            document.getElementById('mensajeEliminarEmpleado').innerHTML = 'Empleado no encontrado.';
+            mensajeEliminar.textContent = 'Empleado no encontrado.';
         }
     });
 };
@@ -157,136 +242,226 @@ document.getElementById('eliminarEmpleado').addEventListener('click', generarFor
 const generarFormularioEditarEmpleado = () => {
     limpiarMain(); // Limpiar todo el contenido de main antes de generar el formulario
 
-    const formulario = `
-        <h2>Editar Empleado</h2>
-        <form id="formEditarEmpleado">
-            <label for="idEmpleado">ID del Empleado:</label>
-            <input type="number" id="idEmpleado" placeholder="Ingrese el ID del empleado" required>
-
-            <button type="button" id="validarEmpleado">Validar</button>
-
-            <div id="formularioEmpleado" style="display: none;">
-                <label for="nuevoNombre">Nuevo Nombre:</label>
-                <input type="text" id="nuevoNombre">
-
-                <label for="nuevoPuesto">Nuevo Puesto:</label>
-                <input type="text" id="nuevoPuesto">
-
-                <label for="nuevoSalario">Nuevo Salario:</label>
-                <input type="number" id="nuevoSalario">
-
-                <button type="submit">Guardar Cambios</button>
-            </div>
-
-            <div id="mensajeExito" style="display: none; color: green;">
-                <p>Empleado editado correctamente</p>
-            </div>
-        </form>
-    `;
-
-    // Insertar el formulario en el main
+    // Crear el contenedor principal del formulario
     const contenedorFormulario = document.createElement('div');
     contenedorFormulario.id = 'formularioEditarEmpleado';
-    contenedorFormulario.innerHTML = formulario;
+
+    // Crear el título
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Editar Empleado';
+    contenedorFormulario.appendChild(titulo);
+
+    // Crear el formulario
+    const form = document.createElement('form');
+    form.id = 'formEditarEmpleado';
+
+    // Campo para el ID del empleado
+    const labelID = document.createElement('label');
+    labelID.setAttribute('for', 'idEmpleado');
+    labelID.textContent = 'ID del Empleado:';
+    form.appendChild(labelID);
+
+    const inputID = document.createElement('input');
+    inputID.setAttribute('type', 'number');
+    inputID.id = 'idEmpleado';
+    inputID.setAttribute('placeholder', 'Ingrese el ID del empleado');
+    inputID.required = true;
+    form.appendChild(inputID);
+
+    // Botón para validar el empleado
+    const botonValidar = document.createElement('button');
+    botonValidar.setAttribute('type', 'button');
+    botonValidar.id = 'validarEmpleado';
+    botonValidar.textContent = 'Validar';
+    form.appendChild(botonValidar);
+
+    // Div para los campos de edición
+    const divFormularioEmpleado = document.createElement('div');
+    divFormularioEmpleado.id = 'formularioEmpleado';
+    divFormularioEmpleado.style.display = 'none';
+
+    const labelNombre = document.createElement('label');
+    labelNombre.setAttribute('for', 'nuevoNombre');
+    labelNombre.textContent = 'Nuevo Nombre:';
+    divFormularioEmpleado.appendChild(labelNombre);
+
+    const inputNombre = document.createElement('input');
+    inputNombre.setAttribute('type', 'text');
+    inputNombre.id = 'nuevoNombre';
+    divFormularioEmpleado.appendChild(inputNombre);
+
+    const labelPuesto = document.createElement('label');
+    labelPuesto.setAttribute('for', 'nuevoPuesto');
+    labelPuesto.textContent = 'Nuevo Puesto:';
+    divFormularioEmpleado.appendChild(labelPuesto);
+
+    const inputPuesto = document.createElement('input');
+    inputPuesto.setAttribute('type', 'text');
+    inputPuesto.id = 'nuevoPuesto';
+    divFormularioEmpleado.appendChild(inputPuesto);
+
+    const labelSalario = document.createElement('label');
+    labelSalario.setAttribute('for', 'nuevoSalario');
+    labelSalario.textContent = 'Nuevo Salario:';
+    divFormularioEmpleado.appendChild(labelSalario);
+
+    const inputSalario = document.createElement('input');
+    inputSalario.setAttribute('type', 'number');
+    inputSalario.id = 'nuevoSalario';
+    divFormularioEmpleado.appendChild(inputSalario);
+
+    const botonGuardar = document.createElement('button');
+    botonGuardar.setAttribute('type', 'submit');
+    botonGuardar.textContent = 'Guardar Cambios';
+    divFormularioEmpleado.appendChild(botonGuardar);
+
+    form.appendChild(divFormularioEmpleado);
+
+    // Mensaje de éxito
+    const mensajeExito = document.createElement('div');
+    mensajeExito.id = 'mensajeExito';
+    mensajeExito.style.display = 'none';
+    mensajeExito.style.color = 'green';
+    mensajeExito.innerHTML = '<p>Empleado editado correctamente</p>';
+    form.appendChild(mensajeExito);
+
+    // Agregar el formulario al contenedor
+    contenedorFormulario.appendChild(form);
+
+    // Insertar el contenedor en el main
     document.querySelector('main').appendChild(contenedorFormulario);
 
-    // Asignar evento para el botón de validación
-    document.getElementById('validarEmpleado').addEventListener('click', () => {
-        const id_empleado = parseInt(document.getElementById('idEmpleado').value);
+    // Asignar evento al botón de validar
+    botonValidar.addEventListener('click', () => {
+        const id_empleado = parseInt(inputID.value);
         const empleados = obtenerEmpleados();
         const empleado = empleados.find(emp => emp.id_empleado === id_empleado);
 
         if (empleado) {
             // Si el empleado existe, mostrar el resto del formulario
-            document.getElementById('formularioEmpleado').style.display = 'block';
-            document.getElementById('nuevoNombre').value = empleado.nombre;
-            document.getElementById('nuevoPuesto').value = empleado.puesto;
-            document.getElementById('nuevoSalario').value = empleado.salario;
-            // Guardar el ID del empleado en el formulario
-            document.getElementById('formEditarEmpleado').setAttribute('data-id-empleado', id_empleado);
+            divFormularioEmpleado.style.display = 'block';
+            inputNombre.value = empleado.nombre;
+            inputPuesto.value = empleado.puesto;
+            inputSalario.value = empleado.salario;
+            form.setAttribute('data-id-empleado', id_empleado);
         } else {
-            // Si no existe, mostrar un mensaje de error
             alert('Empleado no encontrado');
-            document.getElementById('formularioEmpleado').style.display = 'none';
+            divFormularioEmpleado.style.display = 'none';
         }
     });
 
-    // Asignar evento para guardar los cambios
-    document.getElementById('formEditarEmpleado').addEventListener('submit', (event) => {
+    // Asignar evento al formulario para guardar cambios
+    form.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const id_empleado = parseInt(document.getElementById('formEditarEmpleado').getAttribute('data-id-empleado'));
-        const nuevoNombre = document.getElementById('nuevoNombre').value;
-        const nuevoPuesto = document.getElementById('nuevoPuesto').value;
-        const nuevoSalario = parseFloat(document.getElementById('nuevoSalario').value);
+        const id_empleado = parseInt(form.getAttribute('data-id-empleado'));
+        const nuevoNombre = inputNombre.value;
+        const nuevoPuesto = inputPuesto.value;
+        const nuevoSalario = parseFloat(inputSalario.value);
 
-        // Llamar a la función editada que ya está importada desde employees.js
+        // Llamar a la función para editar el empleado
         editarEmpleado(id_empleado, nuevoNombre, nuevoPuesto, nuevoSalario);
 
         // Mostrar mensaje de éxito
-        document.getElementById('mensajeExito').style.display = 'block';
+        mensajeExito.style.display = 'block';
 
         // Limpiar el formulario después de guardar, pero mantener el campo de ID para validación
-        document.getElementById('formularioEmpleado').style.display = 'none';
+        divFormularioEmpleado.style.display = 'none';
     });
 };
 
-// Función para cargar el formulario de un empleado a editar
-const cargarFormularioEditarEmpleado = () => {
-    generarFormularioEditarEmpleado();
-};
-
 // Evento para el botón de "Editar Empleado"
-document.getElementById('editarEmpleado').addEventListener('click', cargarFormularioEditarEmpleado);
+document.getElementById('editarEmpleado').addEventListener('click', generarFormularioEditarEmpleado);
 
 //------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
 //FUNCIONES DE PROYECTOS
 // Función para generar el formulario de Crear Proyecto
 const generarFormularioCrearProyecto = () => {
-    
+    limpiarMain(); // Limpiar todo el contenido de main antes de generar el formulario
 
-    const formulario = `
-        <h2>Crear Proyecto</h2>
-        <form id="formCrearProyecto">
-            <label for="nombreProyecto">Nombre del Proyecto:</label>
-            <input type="text" id="nombreProyecto" required>
+    // Crear el contenedor principal
+    const contenedorFormulario = document.createElement('div');
+    contenedorFormulario.id = 'formularioCrearProyecto';
 
-            <label for="fechaInicio">Fecha de Inicio:</label>
-            <input type="date" id="fechaInicio" required>
+    // Crear el título
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Crear Proyecto';
+    contenedorFormulario.appendChild(titulo);
 
-            <label for="fechaFin">Fecha de Fin:</label>
-            <input type="date" id="fechaFin" required>
+    // Crear el formulario
+    const form = document.createElement('form');
+    form.id = 'formCrearProyecto';
 
-            <button type="submit">Crear Proyecto</button>
-        </form>
-    `;
+    // Campo: Nombre del Proyecto
+    const labelNombre = document.createElement('label');
+    labelNombre.setAttribute('for', 'nombreProyecto');
+    labelNombre.textContent = 'Nombre del Proyecto:';
+    form.appendChild(labelNombre);
 
-    // Insertar el formulario dentro de un contenedor específico
-    document.querySelector('main').innerHTML = formulario;
-    
+    const inputNombre = document.createElement('input');
+    inputNombre.setAttribute('type', 'text');
+    inputNombre.id = 'nombreProyecto';
+    inputNombre.required = true;
+    form.appendChild(inputNombre);
 
-    // Asignar el evento de submit para crear el proyecto
-    document.getElementById('formCrearProyecto').addEventListener('submit', (event) => {
+    // Campo: Fecha de Inicio
+    const labelFechaInicio = document.createElement('label');
+    labelFechaInicio.setAttribute('for', 'fechaInicio');
+    labelFechaInicio.textContent = 'Fecha de Inicio:';
+    form.appendChild(labelFechaInicio);
+
+    const inputFechaInicio = document.createElement('input');
+    inputFechaInicio.setAttribute('type', 'date');
+    inputFechaInicio.id = 'fechaInicio';
+    inputFechaInicio.required = true;
+    form.appendChild(inputFechaInicio);
+
+    // Campo: Fecha de Fin
+    const labelFechaFin = document.createElement('label');
+    labelFechaFin.setAttribute('for', 'fechaFin');
+    labelFechaFin.textContent = 'Fecha de Fin:';
+    form.appendChild(labelFechaFin);
+
+    const inputFechaFin = document.createElement('input');
+    inputFechaFin.setAttribute('type', 'date');
+    inputFechaFin.id = 'fechaFin';
+    inputFechaFin.required = true;
+    form.appendChild(inputFechaFin);
+
+    // Botón de envío
+    const botonSubmit = document.createElement('button');
+    botonSubmit.setAttribute('type', 'submit');
+    botonSubmit.textContent = 'Crear Proyecto';
+    form.appendChild(botonSubmit);
+
+    // Agregar el formulario al contenedor principal
+    contenedorFormulario.appendChild(form);
+
+    // Insertar el contenedor en el main
+    document.querySelector('main').appendChild(contenedorFormulario);
+
+    // Asignar el evento de submit al formulario
+    form.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const nombreProyecto = document.getElementById('nombreProyecto').value;
-        const fechaInicio = document.getElementById('fechaInicio').value;
-        const fechaFin = document.getElementById('fechaFin').value;
+        const nombreProyecto = inputNombre.value;
+        const fechaInicio = inputFechaInicio.value;
+        const fechaFin = inputFechaFin.value;
 
         if (nombreProyecto && fechaInicio && fechaFin) {
             // Llamar a la función para agregar un proyecto
             agregarProyecto(nombreProyecto, fechaInicio, fechaFin);
 
             // Mostrar mensaje de éxito
-            alert("Proyecto creado correctamente.");
+            alert('Proyecto creado correctamente.');
 
             // Limpiar los campos del formulario pero mantener el formulario visible
-            document.getElementById('nombreProyecto').value = '';
-            document.getElementById('fechaInicio').value = '';
-            document.getElementById('fechaFin').value = '';
+            inputNombre.value = '';
+            inputFechaInicio.value = '';
+            inputFechaFin.value = '';
         } else {
-            alert("Por favor, completa todos los campos.");
+            alert('Por favor, completa todos los campos.');
         }
     });
 };
@@ -298,109 +473,198 @@ document.getElementById('crearProyecto').addEventListener('click', generarFormul
 //Funcion de Ver Proyectos
 const mostrarProyectos = () => {
     limpiarMain(); // Limpiar el contenido de main antes de mostrar los proyectos
-    
+
     const proyectos = obtenerProyectos(); // Obtener todos los proyectos
+
+    // Crear el contenedor principal
     const contenedorProyectos = document.createElement('div');
-    
-    // Si no hay proyectos registrados, mostrar un mensaje
+    contenedorProyectos.classList.add('contenedor-tabla-proyectos');
+
+    // Crear el título
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Lista de Proyectos Registrados';
+    contenedorProyectos.appendChild(titulo);
+
+    // Verificar si hay proyectos registrados
     if (proyectos.length === 0) {
-        contenedorProyectos.innerHTML = '<p>No hay proyectos registrados.</p>';
+        const mensaje = document.createElement('p');
+        mensaje.textContent = 'No hay proyectos registrados.';
+        contenedorProyectos.appendChild(mensaje);
     } else {
-        const listaProyectos = document.createElement('ul');
-        
-        // Recorrer cada proyecto y agregarlo a la lista
-        proyectos.forEach(proyecto => {
-            const proyectoElemento = document.createElement('li');
-            proyectoElemento.textContent = `ID: ${proyecto.id_proyecto}, Nombre: ${proyecto.nombre_proyecto}, Fecha Inicio: ${proyecto.fecha_inicio}, Fecha Fin: ${proyecto.fecha_fin}`;
-            listaProyectos.appendChild(proyectoElemento);
+        // Crear la tabla
+        const tabla = document.createElement('table');
+        tabla.classList.add('tabla-proyectos');
+
+        // Crear la cabecera de la tabla
+        const cabecera = document.createElement('thead');
+        const filaCabecera = document.createElement('tr');
+
+        ['ID', 'Nombre del Proyecto', 'Fecha de Inicio', 'Fecha de Fin'].forEach(texto => {
+            const th = document.createElement('th');
+            th.textContent = texto;
+            filaCabecera.appendChild(th);
         });
-        
-        contenedorProyectos.appendChild(listaProyectos);
+
+        cabecera.appendChild(filaCabecera);
+        tabla.appendChild(cabecera);
+
+        // Crear el cuerpo de la tabla
+        const cuerpo = document.createElement('tbody');
+
+        proyectos.forEach(proyecto => {
+            const fila = document.createElement('tr');
+
+            ['id_proyecto', 'nombre_proyecto', 'fecha_inicio', 'fecha_fin'].forEach(campo => {
+                const td = document.createElement('td');
+                td.textContent = proyecto[campo];
+                fila.appendChild(td);
+            });
+
+            cuerpo.appendChild(fila);
+        });
+
+        tabla.appendChild(cuerpo);
+        contenedorProyectos.appendChild(tabla);
     }
 
     // Insertar el contenedor de proyectos en el main
     document.querySelector('main').appendChild(contenedorProyectos);
 };
+
 // Evento para mostrar los proyectos cuando se haga clic en "Ver Proyectos"
 document.getElementById('verProyectos').addEventListener('click', mostrarProyectos);
 //------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
 //Funcion editar Proyecto
 const generarFormularioEditarProyecto = () => {
-    limpiarMain();  // Limpiar el contenido del main antes de mostrar el formulario de edición
+    limpiarMain(); // Limpiar el contenido del main antes de mostrar el formulario de edición
 
-    const formulario = `
-        <h2>Editar Proyecto</h2>
-        <form id="formEditarProyecto">
-            <label for="idProyecto">ID del Proyecto:</label>
-            <input type="number" id="idProyecto" required placeholder="Ingrese el ID del proyecto a editar">
+    // Crear contenedor principal
+    const contenedorFormulario = document.createElement('div');
+    contenedorFormulario.id = 'formEditarProyectoContainer';
 
-            <button type="button" id="validarProyecto">Validar</button>
+    // Crear título
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Editar Proyecto';
+    contenedorFormulario.appendChild(titulo);
 
-            <div id="formularioProyecto" style="display: none;">
-                <label for="nuevoNombreProyecto">Nuevo Nombre del Proyecto:</label>
-                <input type="text" id="nuevoNombreProyecto">
+    // Crear formulario
+    const formulario = document.createElement('form');
+    formulario.id = 'formEditarProyecto';
 
-                <label for="nuevaFechaInicio">Nueva Fecha de Inicio:</label>
-                <input type="date" id="nuevaFechaInicio">
+    // Campo de ID del proyecto
+    const labelId = document.createElement('label');
+    labelId.setAttribute('for', 'idProyecto');
+    labelId.textContent = 'ID del Proyecto:';
+    formulario.appendChild(labelId);
 
-                <label for="nuevaFechaFin">Nueva Fecha de Fin:</label>
-                <input type="date" id="nuevaFechaFin">
+    const inputId = document.createElement('input');
+    inputId.type = 'number';
+    inputId.id = 'idProyecto';
+    inputId.required = true;
+    inputId.placeholder = 'Ingrese el ID del proyecto a editar';
+    formulario.appendChild(inputId);
 
-                <button type="submit">Guardar Cambios</button>
-            </div>
+    // Botón de validación
+    const botonValidar = document.createElement('button');
+    botonValidar.type = 'button';
+    botonValidar.id = 'validarProyecto';
+    botonValidar.textContent = 'Validar';
+    formulario.appendChild(botonValidar);
 
-            <div id="mensajeExito" style="display: none; color: green;">
-                <p>Proyecto editado correctamente</p>
-            </div>
-        </form>
-    `;
+    // Contenedor oculto para los campos de edición
+    const contenedorEdicion = document.createElement('div');
+    contenedorEdicion.id = 'formularioProyecto';
+    contenedorEdicion.style.display = 'none';
 
-    // Insertar el formulario en el main
-    document.querySelector('main').innerHTML = formulario;
+    // Nuevo nombre del proyecto
+    const labelNombre = document.createElement('label');
+    labelNombre.setAttribute('for', 'nuevoNombreProyecto');
+    labelNombre.textContent = 'Nuevo Nombre del Proyecto:';
+    contenedorEdicion.appendChild(labelNombre);
 
-    // Asignar evento para el botón de validación (verificar si el proyecto existe)
-    document.getElementById('validarProyecto').addEventListener('click', () => {
-        const id_proyecto = parseInt(document.getElementById('idProyecto').value);
+    const inputNombre = document.createElement('input');
+    inputNombre.type = 'text';
+    inputNombre.id = 'nuevoNombreProyecto';
+    contenedorEdicion.appendChild(inputNombre);
+
+    // Nueva fecha de inicio
+    const labelFechaInicio = document.createElement('label');
+    labelFechaInicio.setAttribute('for', 'nuevaFechaInicio');
+    labelFechaInicio.textContent = 'Nueva Fecha de Inicio:';
+    contenedorEdicion.appendChild(labelFechaInicio);
+
+    const inputFechaInicio = document.createElement('input');
+    inputFechaInicio.type = 'date';
+    inputFechaInicio.id = 'nuevaFechaInicio';
+    contenedorEdicion.appendChild(inputFechaInicio);
+
+    // Nueva fecha de fin
+    const labelFechaFin = document.createElement('label');
+    labelFechaFin.setAttribute('for', 'nuevaFechaFin');
+    labelFechaFin.textContent = 'Nueva Fecha de Fin:';
+    contenedorEdicion.appendChild(labelFechaFin);
+
+    const inputFechaFin = document.createElement('input');
+    inputFechaFin.type = 'date';
+    inputFechaFin.id = 'nuevaFechaFin';
+    contenedorEdicion.appendChild(inputFechaFin);
+
+    // Botón de guardar cambios
+    const botonGuardar = document.createElement('button');
+    botonGuardar.type = 'submit';
+    botonGuardar.textContent = 'Guardar Cambios';
+    contenedorEdicion.appendChild(botonGuardar);
+
+    formulario.appendChild(contenedorEdicion);
+
+    // Mensaje de éxito
+    const mensajeExito = document.createElement('div');
+    mensajeExito.id = 'mensajeExito';
+    mensajeExito.style.display = 'none';
+    mensajeExito.style.color = 'green';
+    mensajeExito.textContent = 'Proyecto editado correctamente';
+    formulario.appendChild(mensajeExito);
+
+    contenedorFormulario.appendChild(formulario);
+
+    // Insertar el contenedor en el main
+    document.querySelector('main').appendChild(contenedorFormulario);
+
+    // Asignar evento al botón de validación
+    botonValidar.addEventListener('click', () => {
+        const id_proyecto = parseInt(inputId.value);
         const proyectos = obtenerProyectos();
         const proyecto = proyectos.find(proyecto => proyecto.id_proyecto === id_proyecto);
 
         if (proyecto) {
-            // Si el proyecto existe, mostrar el resto del formulario con los datos del proyecto
-            document.getElementById('formularioProyecto').style.display = 'block';
-            document.getElementById('nuevoNombreProyecto').value = proyecto.nombre_proyecto;
-            document.getElementById('nuevaFechaInicio').value = proyecto.fecha_inicio;
-            document.getElementById('nuevaFechaFin').value = proyecto.fecha_fin;
+            contenedorEdicion.style.display = 'block';
+            inputNombre.value = proyecto.nombre_proyecto;
+            inputFechaInicio.value = proyecto.fecha_inicio;
+            inputFechaFin.value = proyecto.fecha_fin;
 
-            // Guardar el ID del proyecto en el formulario
-            document.getElementById('formEditarProyecto').setAttribute('data-id-proyecto', id_proyecto);
+            formulario.setAttribute('data-id-proyecto', id_proyecto);
         } else {
-            // Si no existe, mostrar mensaje de error
             alert('Proyecto no encontrado');
-            document.getElementById('formularioProyecto').style.display = 'none';
+            contenedorEdicion.style.display = 'none';
         }
     });
 
-    // Asignar evento para guardar los cambios del proyecto
-    document.getElementById('formEditarProyecto').addEventListener('submit', (event) => {
+    // Asignar evento para guardar los cambios
+    formulario.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const id_proyecto = parseInt(document.getElementById('formEditarProyecto').getAttribute('data-id-proyecto'));
-        const nuevoNombreProyecto = document.getElementById('nuevoNombreProyecto').value;
-        const nuevaFechaInicio = document.getElementById('nuevaFechaInicio').value;
-        const nuevaFechaFin = document.getElementById('nuevaFechaFin').value;
+        const id_proyecto = parseInt(formulario.getAttribute('data-id-proyecto'));
+        const nuevoNombreProyecto = inputNombre.value;
+        const nuevaFechaInicio = inputFechaInicio.value;
+        const nuevaFechaFin = inputFechaFin.value;
 
-        // Llamar a la función para editar el proyecto
         editarProyecto(id_proyecto, nuevoNombreProyecto, nuevaFechaInicio, nuevaFechaFin);
 
-        // Mostrar mensaje de éxito
-        document.getElementById('mensajeExito').style.display = 'block';
-
-        // Limpiar el formulario después de guardar, pero mantener el campo de ID para validación
-        document.getElementById('formularioProyecto').style.display = 'none';
+        mensajeExito.style.display = 'block';
+        contenedorEdicion.style.display = 'none';
     });
 };
-
 // Evento para el botón de "Editar Proyecto"
 document.getElementById('editarProyecto').addEventListener('click', generarFormularioEditarProyecto);
 //------------------------------------------------------------------------------------------------------
@@ -409,32 +673,64 @@ document.getElementById('editarProyecto').addEventListener('click', generarFormu
 const generarFormularioEliminarProyecto = () => {
     limpiarMain(); // Limpiar el contenido del main antes de mostrar el formulario de eliminación
 
-    const formulario = `
-        <h2>Eliminar Proyecto</h2>
-        <form id="formEliminarProyecto">
-            <label for="idProyectoEliminar">ID del Proyecto a Eliminar:</label>
-            <input type="number" id="idProyectoEliminar" required placeholder="Ingrese el ID del proyecto a eliminar">
+    // Crear contenedor principal
+    const contenedorFormulario = document.createElement('div');
+    contenedorFormulario.id = 'formEliminarProyectoContainer';
 
-            <button type="submit">Eliminar Proyecto</button>
-        </form>
+    // Crear título
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Eliminar Proyecto';
+    contenedorFormulario.appendChild(titulo);
 
-        <div id="mensajeExitoEliminar" style="display: none; color: red;">
-            <p>Proyecto eliminado correctamente</p>
-        </div>
+    // Crear formulario
+    const formulario = document.createElement('form');
+    formulario.id = 'formEliminarProyecto';
 
-        <div id="mensajeErrorEliminar" style="display: none; color: red;">
-            <p>Proyecto no encontrado</p>
-        </div>
-    `;
+    // Campo para ID del proyecto a eliminar
+    const labelId = document.createElement('label');
+    labelId.setAttribute('for', 'idProyectoEliminar');
+    labelId.textContent = 'ID del Proyecto a Eliminar:';
+    formulario.appendChild(labelId);
 
-    // Insertar el formulario en el main
-    document.querySelector('main').innerHTML = formulario;
+    const inputId = document.createElement('input');
+    inputId.type = 'number';
+    inputId.id = 'idProyectoEliminar';
+    inputId.required = true;
+    inputId.placeholder = 'Ingrese el ID del proyecto a eliminar';
+    formulario.appendChild(inputId);
 
-    // Asignar evento para el formulario de eliminar proyecto
-    document.getElementById('formEliminarProyecto').addEventListener('submit', (event) => {
+    // Botón de eliminación
+    const botonEliminar = document.createElement('button');
+    botonEliminar.type = 'submit';
+    botonEliminar.textContent = 'Eliminar Proyecto';
+    formulario.appendChild(botonEliminar);
+
+    contenedorFormulario.appendChild(formulario);
+
+    // Mensaje de éxito
+    const mensajeExito = document.createElement('div');
+    mensajeExito.id = 'mensajeExitoEliminar';
+    mensajeExito.style.display = 'none';
+    mensajeExito.style.color = 'green';
+    mensajeExito.textContent = 'Proyecto eliminado correctamente';
+    contenedorFormulario.appendChild(mensajeExito);
+
+    // Mensaje de error
+    const mensajeError = document.createElement('div');
+    mensajeError.id = 'mensajeErrorEliminar';
+    mensajeError.style.display = 'none';
+    mensajeError.style.color = 'red';
+    mensajeError.textContent = 'Proyecto no encontrado';
+    contenedorFormulario.appendChild(mensajeError);
+
+    // Insertar el contenedor en el main
+    document.querySelector('main').appendChild(contenedorFormulario);
+
+    // Asignar evento al formulario de eliminación
+    formulario.addEventListener('submit', (event) => {
         event.preventDefault();
 
-        const id_proyectoEliminar = parseInt(document.getElementById('idProyectoEliminar').value);
+        const id_proyectoEliminar = parseInt(inputId.value);
         const proyectos = obtenerProyectos();
         const proyectoExistente = proyectos.find(proyecto => proyecto.id_proyecto === id_proyectoEliminar);
 
@@ -443,57 +739,115 @@ const generarFormularioEliminarProyecto = () => {
             eliminarProyecto(id_proyectoEliminar);
 
             // Mostrar mensaje de éxito y ocultar mensaje de error
-            document.getElementById('mensajeExitoEliminar').style.display = 'block';
-            document.getElementById('mensajeErrorEliminar').style.display = 'none';
+            mensajeExito.style.display = 'block';
+            mensajeError.style.display = 'none';
         } else {
             // Si el proyecto no existe, mostrar mensaje de error
-            document.getElementById('mensajeErrorEliminar').style.display = 'block';
-            document.getElementById('mensajeExitoEliminar').style.display = 'none';
+            mensajeError.style.display = 'block';
+            mensajeExito.style.display = 'none';
         }
     });
 };
+
 // Evento para el botón de "Eliminar Proyecto"
 document.getElementById('eliminarProyecto').addEventListener('click', generarFormularioEliminarProyecto);
 //--------------------------------------------------
 //Funciones de AsignarProyecto
-// Función para generar el formulario de asignar proyecto a empleado
-// Función para generar el formulario de asignar proyecto a empleado
 const generarFormularioAsignarProyecto = () => {
-    // Limpiar el contenido del main antes de mostrar el formulario
-    limpiarMain();
+    limpiarMain(); // Limpiar el contenido del main antes de mostrar el formulario
 
-    const formulario = `
-        <h2>Asignar Proyecto a Empleado</h2>
-        
-        <!-- Parte de búsqueda de empleado -->
-        <div>
-            <h3>Buscar Empleado</h3>
-            <label for="idEmpleado">ID Empleado:</label>
-            <input type="number" id="idEmpleado" required>
-            <button id="buscarEmpleado">Buscar Empleado</button>
-            <div id="infoEmpleado"></div>
-        </div>
-        
-        <!-- Parte de búsqueda de proyecto -->
-        <div>
-            <h3>Buscar Proyecto</h3>
-            <label for="idProyecto">ID Proyecto:</label>
-            <input type="number" id="idProyecto" required>
-            <button id="buscarProyecto">Buscar Proyecto</button>
-            <div id="infoProyecto"></div>
-        </div>
-        
-        <!-- Asignar el proyecto con el rol -->
-        <div>
-            <h3>Asignar Rol</h3>
-            <label for="rol">Rol:</label>
-            <input type="text" id="rol" required>
-            <button id="asignarRol" disabled>Asignar Proyecto</button>
-        </div>
-    `;
+    // Crear contenedor principal
+    const contenedorFormulario = document.createElement('div');
+    contenedorFormulario.id = 'formAsignarProyectoContainer';
 
-    // Insertar el formulario dentro del main
-    document.querySelector('main').innerHTML = formulario;
+    // Crear título principal
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Asignar Proyecto a Empleado';
+    contenedorFormulario.appendChild(titulo);
+
+    // Sección de búsqueda de empleado
+    const seccionEmpleado = document.createElement('div');
+    const tituloEmpleado = document.createElement('h3');
+    tituloEmpleado.textContent = 'Buscar Empleado';
+    seccionEmpleado.appendChild(tituloEmpleado);
+
+    const labelEmpleado = document.createElement('label');
+    labelEmpleado.setAttribute('for', 'idEmpleado');
+    labelEmpleado.textContent = 'ID Empleado:';
+    seccionEmpleado.appendChild(labelEmpleado);
+
+    const inputEmpleado = document.createElement('input');
+    inputEmpleado.type = 'number';
+    inputEmpleado.id = 'idEmpleado';
+    inputEmpleado.required = true;
+    seccionEmpleado.appendChild(inputEmpleado);
+
+    const botonBuscarEmpleado = document.createElement('button');
+    botonBuscarEmpleado.id = 'buscarEmpleado';
+    botonBuscarEmpleado.textContent = 'Buscar Empleado';
+    seccionEmpleado.appendChild(botonBuscarEmpleado);
+
+    const infoEmpleado = document.createElement('div');
+    infoEmpleado.id = 'infoEmpleado';
+    seccionEmpleado.appendChild(infoEmpleado);
+
+    contenedorFormulario.appendChild(seccionEmpleado);
+
+    // Sección de búsqueda de proyecto
+    const seccionProyecto = document.createElement('div');
+    const tituloProyecto = document.createElement('h3');
+    tituloProyecto.textContent = 'Buscar Proyecto';
+    seccionProyecto.appendChild(tituloProyecto);
+
+    const labelProyecto = document.createElement('label');
+    labelProyecto.setAttribute('for', 'idProyecto');
+    labelProyecto.textContent = 'ID Proyecto:';
+    seccionProyecto.appendChild(labelProyecto);
+
+    const inputProyecto = document.createElement('input');
+    inputProyecto.type = 'number';
+    inputProyecto.id = 'idProyecto';
+    inputProyecto.required = true;
+    seccionProyecto.appendChild(inputProyecto);
+
+    const botonBuscarProyecto = document.createElement('button');
+    botonBuscarProyecto.id = 'buscarProyecto';
+    botonBuscarProyecto.textContent = 'Buscar Proyecto';
+    seccionProyecto.appendChild(botonBuscarProyecto);
+
+    const infoProyecto = document.createElement('div');
+    infoProyecto.id = 'infoProyecto';
+    seccionProyecto.appendChild(infoProyecto);
+
+    contenedorFormulario.appendChild(seccionProyecto);
+
+    // Sección de asignar rol
+    const seccionRol = document.createElement('div');
+    const tituloRol = document.createElement('h3');
+    tituloRol.textContent = 'Asignar Rol';
+    seccionRol.appendChild(tituloRol);
+
+    const labelRol = document.createElement('label');
+    labelRol.setAttribute('for', 'rol');
+    labelRol.textContent = 'Rol:';
+    seccionRol.appendChild(labelRol);
+
+    const inputRol = document.createElement('input');
+    inputRol.type = 'text';
+    inputRol.id = 'rol';
+    inputRol.required = true;
+    seccionRol.appendChild(inputRol);
+
+    const botonAsignar = document.createElement('button');
+    botonAsignar.id = 'asignarRol';
+    botonAsignar.textContent = 'Asignar Proyecto';
+    botonAsignar.disabled = true;
+    seccionRol.appendChild(botonAsignar);
+
+    contenedorFormulario.appendChild(seccionRol);
+
+    // Agregar el contenedor principal al main
+    document.querySelector('main').appendChild(contenedorFormulario);
 
     // Función para obtener empleado por ID desde el localStorage
     const obtenerEmpleadoPorId = (idEmpleado) => {
@@ -508,11 +862,10 @@ const generarFormularioAsignarProyecto = () => {
     };
 
     // Evento para buscar al empleado por ID
-    document.getElementById('buscarEmpleado').addEventListener('click', () => {
-        const idEmpleado = document.getElementById('idEmpleado').value;
+    botonBuscarEmpleado.addEventListener('click', () => {
+        const idEmpleado = inputEmpleado.value;
         if (idEmpleado) {
             const empleado = obtenerEmpleadoPorId(idEmpleado);
-            const infoEmpleado = document.getElementById('infoEmpleado');
             if (empleado) {
                 infoEmpleado.innerHTML = `
                     <p>Nombre: ${empleado.nombre}</p>
@@ -523,85 +876,114 @@ const generarFormularioAsignarProyecto = () => {
                 infoEmpleado.innerHTML = '<p>Empleado no encontrado.</p>';
             }
         } else {
-            alert("Por favor ingresa un ID de empleado.");
+            alert('Por favor ingresa un ID de empleado.');
         }
     });
 
     // Evento para buscar el proyecto por ID
-    document.getElementById('buscarProyecto').addEventListener('click', () => {
-        const idProyecto = document.getElementById('idProyecto').value;
+    botonBuscarProyecto.addEventListener('click', () => {
+        const idProyecto = inputProyecto.value;
         if (idProyecto) {
             const proyecto = obtenerProyectoPorId(idProyecto);
-            const infoProyecto = document.getElementById('infoProyecto');
             if (proyecto) {
                 infoProyecto.innerHTML = `
                     <p>Nombre del Proyecto: ${proyecto.nombre_proyecto}</p>
                     <p>Fecha de Inicio: ${proyecto.fecha_inicio}</p>
                     <p>Fecha de Fin: ${proyecto.fecha_fin}</p>
                 `;
-                document.getElementById('asignarRol').disabled = false; // Habilitar botón de asignar
+                botonAsignar.disabled = false; // Habilitar botón de asignar
             } else {
                 infoProyecto.innerHTML = '<p>Proyecto no encontrado.</p>';
             }
         } else {
-            alert("Por favor ingresa un ID de proyecto.");
+            alert('Por favor ingresa un ID de proyecto.');
         }
     });
 
     // Evento para asignar el proyecto al empleado
-    document.getElementById('asignarRol').addEventListener('click', () => {
-        const idEmpleado = document.getElementById('idEmpleado').value;
-        const idProyecto = document.getElementById('idProyecto').value;
-        const rol = document.getElementById('rol').value;
+    botonAsignar.addEventListener('click', () => {
+        const idEmpleado = inputEmpleado.value;
+        const idProyecto = inputProyecto.value;
+        const rol = inputRol.value;
 
         if (idEmpleado && idProyecto && rol) {
             // Llamamos a la función para agregar la participación
             agregarParticipacion(idEmpleado, idProyecto, rol);
 
             // Mostrar mensaje de éxito
-            alert("Empleado asignado al proyecto correctamente.");
+            alert('Empleado asignado al proyecto correctamente.');
 
             // Limpiar campos
-            document.getElementById('idEmpleado').value = '';
-            document.getElementById('idProyecto').value = '';
-            document.getElementById('rol').value = '';
-            document.getElementById('infoEmpleado').innerHTML = '';
-            document.getElementById('infoProyecto').innerHTML = '';
-            document.getElementById('asignarRol').disabled = true;
+            inputEmpleado.value = '';
+            inputProyecto.value = '';
+            inputRol.value = '';
+            infoEmpleado.innerHTML = '';
+            infoProyecto.innerHTML = '';
+            botonAsignar.disabled = true;
         } else {
-            alert("Por favor, completa todos los campos.");
+            alert('Por favor, completa todos los campos.');
         }
     });
 };
 
-
-// Llamamos a la función para generar el formulario cuando el botón de asignar se haga clic
+// Llamar a la función cuando se haga clic en el botón de asignar
 document.getElementById('asignacion').addEventListener('click', generarFormularioAsignarProyecto);
-//---=mostrar informacion de grupo
 
+
+//--------------------------------------------------------
 const mostrarInformacionGrupo = () => {
-    // Limpiar el contenido del main antes de mostrar la información
-    limpiarMain();
+    limpiarMain(); // Limpiar el contenido del main antes de mostrar la información
 
     const contenedorInformacion = document.createElement('div');
-    contenedorInformacion.innerHTML = "<h2>Información de Participaciones</h2>";
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Información de Participaciones';
+    contenedorInformacion.appendChild(titulo);
 
     // Obtener las participaciones del localStorage
     const participaciones = JSON.parse(localStorage.getItem('participaciones')) || [];
 
     if (participaciones.length === 0) {
-        contenedorInformacion.innerHTML += '<p>No hay participaciones registradas.</p>';
+        const mensaje = document.createElement('p');
+        mensaje.textContent = 'No hay participaciones registradas.';
+        contenedorInformacion.appendChild(mensaje);
     } else {
-        const listaParticipaciones = document.createElement('ul');
-        
-        // Recorrer todas las participaciones y mostrar ID empleado, ID proyecto y rol
+        // Crear tabla para mostrar las participaciones
+        const tabla = document.createElement('table');
+        tabla.classList.add('tabla-participaciones');
+
+        // Crear encabezado de la tabla
+        const thead = document.createElement('thead');
+        const encabezadoFila = document.createElement('tr');
+        const columnas = ['ID Empleado', 'ID Proyecto', 'Rol'];
+        columnas.forEach(columna => {
+            const th = document.createElement('th');
+            th.textContent = columna;
+            encabezadoFila.appendChild(th);
+        });
+        thead.appendChild(encabezadoFila);
+        tabla.appendChild(thead);
+
+        // Crear cuerpo de la tabla
+        const tbody = document.createElement('tbody');
         participaciones.forEach(participacion => {
-            const participacionElemento = document.createElement('li');
-            participacionElemento.textContent = `ID Empleado: ${participacion.id_empleado}, ID Proyecto: ${participacion.id_proyecto}, Rol: ${participacion.rol}`;
-            listaParticipaciones.appendChild(participacionElemento);
+            const fila = document.createElement('tr');
+            const celdaEmpleado = document.createElement('td');
+            celdaEmpleado.textContent = participacion.id_empleado;
+
+            const celdaProyecto = document.createElement('td');
+            celdaProyecto.textContent = participacion.id_proyecto;
+
+            const celdaRol = document.createElement('td');
+            celdaRol.textContent = participacion.rol;
+
+            fila.appendChild(celdaEmpleado);
+            fila.appendChild(celdaProyecto);
+            fila.appendChild(celdaRol);
+            tbody.appendChild(fila);
         });
 
-        contenedorInformacion.appendChild(listaParticipaciones);
+        tabla.appendChild(tbody);
+        contenedorInformacion.appendChild(tabla);
     }
 
     // Insertar la información en el main
@@ -610,3 +992,37 @@ const mostrarInformacionGrupo = () => {
 
 // Evento para mostrar la información de las participaciones cuando se haga clic en el botón de mostrar
 document.getElementById('informacion').addEventListener('click', mostrarInformacionGrupo);
+
+//---------------------------------------
+//Manejo de animacion dle aside
+// Función para manejar el clic en Empleados y Proyectos
+const toggleMenu = (menuId, iconId) => {
+    const subMenu = document.getElementById(menuId);
+    const icon = document.getElementById(iconId);
+    
+    // Si el submenú está oculto, lo mostramos
+    if (subMenu.classList.contains('open')) {
+        subMenu.classList.remove('open'); // Ocultar
+        icon.classList.remove('open'); // Cambiar el icono
+    } else {
+        subMenu.classList.add('open'); // Mostrar
+        icon.classList.add('open'); // Cambiar el icono
+    }
+};
+
+// Asignar eventos de clic a los menús
+document.getElementById('empleados').addEventListener('click', () => {
+    toggleMenu('subEmpleados', 'iconEmpleados');
+});
+
+document.getElementById('proyectos').addEventListener('click', () => {
+    toggleMenu('subProyectos', 'iconProyectos');
+});
+
+//-------------
+//Mostrar Pagina Princiapl aplastando en el titulo
+
+document.getElementById('titleAS').addEventListener('click', () => {
+    // Ocultar el aside y mostrar el main
+    location.reload(); // Recarga la página
+});

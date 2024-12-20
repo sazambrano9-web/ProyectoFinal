@@ -1,21 +1,22 @@
-/* Estilos generales para el cuerpo */
+/* Estilos generales */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-
+    background-color: #eaebed;
 }
 
-/* Estilos del aside */
+/* Estilos para el aside */
 aside {
     width: 250px;
-    background-color: #333;
+    background-color: #0b132b;
     color: white;
     padding: 20px;
     box-sizing: border-box;
     height: 100vh;
     position: fixed;
 }
+
 aside h2 {
     color: #fff;
     font-size: 20px;
@@ -23,6 +24,7 @@ aside h2 {
     text-align: center;
     font-weight: bold;
 }
+
 aside ul {
     list-style-type: none;
     padding: 0;
@@ -42,23 +44,11 @@ aside ul li a {
     transition: background-color 0.3s;
 }
 
-aside ul li a:hover {
-    background-color: #575757;
-}
 
 /* Submenú de acciones */
-aside ul li ul {
-    padding-left: 20px;
-}
 
-aside ul li ul li a {
-    font-size: 14px;
-    padding-left: 15px;
-}
 
-aside ul li ul li a:hover {
-    background-color: #444;
-}
+
 
 /* Estilos para la pantalla principal */
 main {
@@ -77,7 +67,264 @@ main {
 
 /* Títulos */
 h1, h2 {
-    color: #333;
+    color: #1c2541;
+}
+
+/* Estilos para los formularios */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Estilos para las etiquetas (labels) */
+label {
+    font-size: 1rem;
+    color: #1c2541;
+    margin-bottom: 5px;
+}
+
+/* Estilos para los inputs */
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #1c2541;
+    border-radius: 4px;
+    background-color: #eaebed;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Efecto hover para inputs */
+input[type="text"]:hover,
+input[type="number"]:hover {
+    border-color: #6fffe9;
+}
+
+/* Efecto focus para inputs */
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #6fffe9;
+    outline: none;
+    background-color: #ffffff;
+}
+
+/* Estilos para el botón */
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #1c2541;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.3s ease; /* Cambio solo de color */
+}
+
+/* Efecto hover para el botón (solo cambio de color de letra) */
+button:hover {
+    color: #d00000;
+}
+
+/* Efecto focus para el botón */
+button:focus {
+    outline: none;
+    color: #d00000;
+}
+
+/* Estilo de alerta (cuando se crea un empleado con éxito) */
+.alerta {
+    background-color: #6fffe9;
+    color: #0b132b;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Estilos para los mensajes de error */
+.error {
+    color: #d00000;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Estilos de los elementos principales y botones en el aside */
+aside ul li a {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+aside ul li a:hover {
+    color: #6fffe9;
+}
+
+/* Submenú de acciones */
+aside ul li ul {
+    padding-left: 20px;
+}
+
+aside ul li ul li a {
+    font-size: 14px;
+    padding-left: 15px;
+}
+
+aside ul li ul li a:hover {
+    color: #d00000;
+}
+
+/* Contenedor general de la tabla */
+.contenedor-tabla-empleados {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 80%;
+}
+
+/* Título */
+.contenedor-tabla-empleados h2 {
+    color: #0b132b;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Estilo de la tabla */
+.tabla-empleados {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    background-color: #eaebed;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-empleados th, .tabla-empleados td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+/* Cabecera de la tabla */
+.tabla-empleados thead th {
+    background-color: #1c2541;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Filas del cuerpo */
+.tabla-empleados tbody tr:nth-child(even) {
+    background-color: #6fffe9;
+}
+
+.tabla-empleados tbody tr:nth-child(odd) {
+    color: #000000;
+}
+
+/* Hover en las filas */
+.tabla-empleados tbody tr:hover {
+    background-color: #1c2541;
+    color: #eaebed;
+    cursor: pointer;
 }
 
 
+.contenedor-tabla-proyectos {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.tabla-proyectos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tabla-proyectos th, .tabla-proyectos td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.tabla-proyectos th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.tabla-proyectos tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabla-proyectos tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+.tabla-participaciones {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.tabla-participaciones th, .tabla-participaciones td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.tabla-participaciones th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+.tabla-participaciones tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.tabla-participaciones tr:hover {
+    background-color: #ddd;
+}
+
+/* Estilos para los submenús */
+.submenu {
+    display: none; /* Ocultar submenú por defecto */
+    list-style-type: none;
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+.submenu li {
+    margin-bottom: 5px;
+}
+
+/* Animación de despliegue */
+.submenu.open {
+    display: block;
+    max-height: 500px; /* Ajusta según el tamaño esperado */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+/* Icono de flecha */
+#iconEmpleados, #iconProyectos {
+    transition: transform 0.3s ease;
+}
+
+/* Girar el icono hacia arriba cuando el submenú se abre */
+#iconEmpleados.open, #iconProyectos.open {
+    transform: rotate(180deg);
+}

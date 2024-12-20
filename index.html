@@ -3,32 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/c13ee7e503.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href=".\styles\styles.css">
     <title>Document</title>
 </head>
 <body>
     <!-- Aside de navegación -->
     <aside>
-        <h2 class="titleAside">CRUD GRUPO#</h2>
+        <h2 id='titleAS' class="titleAside">CRUD GRUPO#</h2>
         <ul>
-            <li><a href="#" id="empleados">Empleados</a>
-                <ul>
-                    <li><a href="#" id="crearEmpleado">Crear empleado</a></li>
-                    <li><a href="#" id="verEmpleados">Ver empleados</a></li>
-                    <li><a href="#" id="editarEmpleado">Editar empleado</a></li>
-                    <li><a href="#" id="eliminarEmpleado">Eliminar empleado</a></li>
+            <li>
+                <a href="#" id="empleados">
+                    <i class="fa-solid fa-user"></i>&nbsp;&nbsp;Empleados&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-chevron-down" id="iconEmpleados"></i>
+                </a>
+                <ul id="subEmpleados" class="submenu">
+                    <li><a href="#" id="crearEmpleado"><i class="fa-solid fa-plus"></i>&nbsp;Crear empleado</a></li>
+                    <li><a href="#" id="verEmpleados"><i class="fa-solid fa-eye"></i>&nbsp;Ver empleados</a></li>
+                    <li><a href="#" id="editarEmpleado"><i class="fa-solid fa-user-pen"></i>&nbsp;Editar empleado</a></li>
+                    <li><a href="#" id="eliminarEmpleado"><i class="fa-solid fa-trash"></i>&nbsp;Eliminar empleado</a></li>
                 </ul>
             </li>
-            <li><a href="#" id="proyectos">Proyectos</a>
-                <ul>
-                    <li><a href="#" id="crearProyecto">Crear proyecto</a></li>
-                    <li><a href="#" id="verProyectos">Ver proyectos</a></li>
-                    <li><a href="#" id="editarProyecto">Editar proyecto</a></li>
-                    <li><a href="#" id="eliminarProyecto">Eliminar proyecto</a></li>
+            <li>
+                <a href="#" id="proyectos">
+                    <i class="fa-solid fa-diagram-project"></i>&nbsp;&nbsp;Proyectos&nbsp;&nbsp;&nbsp; <i class="fa-solid fa-chevron-down" id="iconProyectos"></i>
+                </a>
+                <ul id="subProyectos" class="submenu">
+                    <li><a href="#" id="crearProyecto"><i class="fa-solid fa-plus"></i>&nbsp;Crear proyecto</a></li>
+                    <li><a href="#" id="verProyectos"><i class="fa-solid fa-eye"></i>&nbsp;Ver proyectos</a></li>
+                    <li><a href="#" id="editarProyecto"><i class="fa-solid fa-file-pen"></i>&nbsp;Editar proyecto</a></li>
+                    <li><a href="#" id="eliminarProyecto"><i class="fa-solid fa-trash"></i>&nbsp;Eliminar proyecto</a></li>
                 </ul>
             </li>
-            <li><a href="#" id="asignacion">Asignación de proyectos a empleados</a></li>
-            <li><a href="#" id="informacion">Información del grupo</a></li>
+            <li><a href="#" id="asignacion"><i class="fa-regular fa-star"></i>&nbsp;&nbsp;Asignación de proyectos a empleados</a></li>
+            <li><a href="#" id="informacion"><i class="fa-solid fa-circle-info"></i>&nbsp;&nbsp;&nbsp;Información del grupo</a></li>
         </ul>
     </aside>
 
