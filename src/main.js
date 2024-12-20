@@ -452,6 +452,127 @@ const generarFormularioEliminarProyecto = () => {
         }
     });
 };
-
 // Evento para el botón de "Eliminar Proyecto"
 document.getElementById('eliminarProyecto').addEventListener('click', generarFormularioEliminarProyecto);
+//--------------------------------------------------
+//Funciones de AsignarProyecto
+// Función para generar el formulario de asignar proyecto a empleado
+// Función para generar el formulario de asignar proyecto a empleado
+const generarFormularioAsignarProyecto = () => {
+    // Limpiar el contenido del main antes de mostrar el formulario
+    limpiarMain();
+
+    const formulario = `
+        <h2>Asignar Proyecto a Empleado</h2>
+        
+        <!-- Parte de búsqueda de empleado -->
+        <div>
+            <h3>Buscar Empleado</h3>
+            <label for="idEmpleado">ID Empleado:</label>
+            <input type="number" id="idEmpleado" required>
+            <button id="buscarEmpleado">Buscar Empleado</button>
+            <div id="infoEmpleado"></div>
+        </div>
+        
+        <!-- Parte de búsqueda de proyecto -->
+        <div>
+            <h3>Buscar Proyecto</h3>
+            <label for="idProyecto">ID Proyecto:</label>
+            <input type="number" id="idProyecto" required>
+            <button id="buscarProyecto">Buscar Proyecto</button>
+            <div id="infoProyecto"></div>
+        </div>
+        
+        <!-- Asignar el proyecto con el rol -->
+        <div>
+            <h3>Asignar Rol</h3>
+            <label for="rol">Rol:</label>
+            <input type="text" id="rol" required>
+            <button id="asignarRol" disabled>Asignar Proyecto</button>
+        </div>
+    `;
+
+    // Insertar el formulario dentro del main
+    document.querySelector('main').innerHTML = formulario;
+
+    // Función para obtener empleado por ID usando las funciones existentes
+    const obtenerEmpleadoPorId = (idEmpleado) => {
+        const empleados = obtenerEmpleados(); // Usamos la función de obtener empleados que ya tienes
+        return empleados.find(empleado => empleado.id_empleado === parseInt(idEmpleado));
+    };
+
+    // Función para obtener proyecto por ID usando las funciones existentes
+    const obtenerProyectoPorId = (idProyecto) => {
+        const proyectos = obtenerProyectos(); // Usamos la función de obtener proyectos que ya tienes
+        return proyectos.find(proyecto => proyecto.id_proyecto === parseInt(idProyecto));
+    };
+
+    // Evento para buscar al empleado por ID
+    document.getElementById('buscarEmpleado').addEventListener('click', () => {
+        const idEmpleado = document.getElementById('idEmpleado').value;
+        if (idEmpleado) {
+            const empleado = obtenerEmpleadoPorId(idEmpleado);
+            const infoEmpleado = document.getElementById('infoEmpleado');
+            if (empleado) {
+                infoEmpleado.innerHTML = `
+                    <p>Nombre: ${empleado.nombre}</p>
+                    <p>Puesto: ${empleado.puesto}</p>
+                    <p>Salario: $${empleado.salario}</p>
+                `;
+            } else {
+                infoEmpleado.innerHTML = '<p>Empleado no encontrado.</p>';
+            }
+        } else {
+            alert("Por favor ingresa un ID de empleado.");
+        }
+    });
+
+    // Evento para buscar el proyecto por ID
+    document.getElementById('buscarProyecto').addEventListener('click', () => {
+        const idProyecto = document.getElementById('idProyecto').value;
+        if (idProyecto) {
+            const proyecto = obtenerProyectoPorId(idProyecto);
+            const infoProyecto = document.getElementById('infoProyecto');
+            if (proyecto) {
+                infoProyecto.innerHTML = `
+                    <p>Nombre del Proyecto: ${proyecto.nombre_proyecto}</p>
+                    <p>Fecha de Inicio: ${proyecto.fecha_inicio}</p>
+                    <p>Fecha de Fin: ${proyecto.fecha_fin}</p>
+                `;
+                document.getElementById('asignarRol').disabled = false; // Habilitar botón de asignar
+            } else {
+                infoProyecto.innerHTML = '<p>Proyecto no encontrado.</p>';
+            }
+        } else {
+            alert("Por favor ingresa un ID de proyecto.");
+        }
+    });
+
+    // Evento para asignar el proyecto al empleado
+    document.getElementById('asignarRol').addEventListener('click', () => {
+        const idEmpleado = document.getElementById('idEmpleado').value;
+        const idProyecto = document.getElementById('idProyecto').value;
+        const rol = document.getElementById('rol').value;
+
+        if (idEmpleado && idProyecto && rol) {
+            // Asignar la participación
+            agregarParticipacion(idEmpleado, idProyecto, rol);
+
+            // Mostrar mensaje de éxito
+            alert("Empleado asignado al proyecto correctamente.");
+
+            // Limpiar campos
+            document.getElementById('idEmpleado').value = '';
+            document.getElementById('idProyecto').value = '';
+            document.getElementById('rol').value = '';
+            document.getElementById('infoEmpleado').innerHTML = '';
+            document.getElementById('infoProyecto').innerHTML = '';
+            document.getElementById('asignarRol').disabled = true;
+        } else {
+            alert("Por favor, completa todos los campos.");
+        }
+    });
+};
+
+// Llamamos a la función para generar el formulario cuando el botón de asignar se haga clic
+document.getElementById('asignacion').addEventListener('click', generarFormularioAsignarProyecto);
