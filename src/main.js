@@ -1,6 +1,6 @@
 import { agregarEmpleado, obtenerEmpleados, editarEmpleado, eliminarEmpleado } from './employees.js';
 import { agregarProyecto, obtenerProyectos, editarProyecto, eliminarProyecto } from './projects.js';
-import { agregarParticipacion, obtenerParticipaciones, eliminarParticipacion } from './participations.js';
+import { agregarParticipacion, obtenerParticipaciones} from './participations.js';
 // Función para limpiar el contenido de <main>
 const limpiarMain = () => {
     document.querySelector('main').innerHTML = '';
@@ -495,15 +495,15 @@ const generarFormularioAsignarProyecto = () => {
     // Insertar el formulario dentro del main
     document.querySelector('main').innerHTML = formulario;
 
-    // Función para obtener empleado por ID usando las funciones existentes
+    // Función para obtener empleado por ID desde el localStorage
     const obtenerEmpleadoPorId = (idEmpleado) => {
-        const empleados = obtenerEmpleados(); // Usamos la función de obtener empleados que ya tienes
+        const empleados = JSON.parse(localStorage.getItem('empleados')) || [];
         return empleados.find(empleado => empleado.id_empleado === parseInt(idEmpleado));
     };
 
-    // Función para obtener proyecto por ID usando las funciones existentes
+    // Función para obtener proyecto por ID desde el localStorage
     const obtenerProyectoPorId = (idProyecto) => {
-        const proyectos = obtenerProyectos(); // Usamos la función de obtener proyectos que ya tienes
+        const proyectos = JSON.parse(localStorage.getItem('proyectos')) || [];
         return proyectos.find(proyecto => proyecto.id_proyecto === parseInt(idProyecto));
     };
 
@@ -555,7 +555,7 @@ const generarFormularioAsignarProyecto = () => {
         const rol = document.getElementById('rol').value;
 
         if (idEmpleado && idProyecto && rol) {
-            // Asignar la participación
+            // Llamamos a la función para agregar la participación
             agregarParticipacion(idEmpleado, idProyecto, rol);
 
             // Mostrar mensaje de éxito
@@ -574,5 +574,39 @@ const generarFormularioAsignarProyecto = () => {
     });
 };
 
+
 // Llamamos a la función para generar el formulario cuando el botón de asignar se haga clic
 document.getElementById('asignacion').addEventListener('click', generarFormularioAsignarProyecto);
+//---=mostrar informacion de grupo
+
+const mostrarInformacionGrupo = () => {
+    // Limpiar el contenido del main antes de mostrar la información
+    limpiarMain();
+
+    const contenedorInformacion = document.createElement('div');
+    contenedorInformacion.innerHTML = "<h2>Información de Participaciones</h2>";
+
+    // Obtener las participaciones del localStorage
+    const participaciones = JSON.parse(localStorage.getItem('participaciones')) || [];
+
+    if (participaciones.length === 0) {
+        contenedorInformacion.innerHTML += '<p>No hay participaciones registradas.</p>';
+    } else {
+        const listaParticipaciones = document.createElement('ul');
+        
+        // Recorrer todas las participaciones y mostrar ID empleado, ID proyecto y rol
+        participaciones.forEach(participacion => {
+            const participacionElemento = document.createElement('li');
+            participacionElemento.textContent = `ID Empleado: ${participacion.id_empleado}, ID Proyecto: ${participacion.id_proyecto}, Rol: ${participacion.rol}`;
+            listaParticipaciones.appendChild(participacionElemento);
+        });
+
+        contenedorInformacion.appendChild(listaParticipaciones);
+    }
+
+    // Insertar la información en el main
+    document.querySelector('main').appendChild(contenedorInformacion);
+};
+
+// Evento para mostrar la información de las participaciones cuando se haga clic en el botón de mostrar
+document.getElementById('informacion').addEventListener('click', mostrarInformacionGrupo);
