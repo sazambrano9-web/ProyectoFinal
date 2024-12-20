@@ -4,7 +4,7 @@
 let proyectos = JSON.parse(localStorage.getItem('proyectos')) || [];
 
 // Función para agregar un proyecto
-export function agregarProyecto(nombre_proyecto, fecha_inicio, fecha_fin) {
+export const agregarProyecto = (nombre_proyecto, fecha_inicio, fecha_fin) => {
     const id_proyecto = proyectos.length > 0 ? proyectos[proyectos.length - 1].id_proyecto + 1 : 1; // ID auto-incremental
     const nuevoProyecto = { id_proyecto, nombre_proyecto, fecha_inicio, fecha_fin };
     proyectos.push(nuevoProyecto);
@@ -12,12 +12,10 @@ export function agregarProyecto(nombre_proyecto, fecha_inicio, fecha_fin) {
 }
 
 // Función para obtener todos los proyectos
-export function obtenerProyectos() {
-    return proyectos;
-}
+export const obtenerProyectos = () => proyectos;
 
 // Función para editar un proyecto
-export function editarProyecto(id_proyecto, nuevoNombre, nuevaFechaInicio, nuevaFechaFin) {
+export const editarProyecto = (id_proyecto, nuevoNombre, nuevaFechaInicio, nuevaFechaFin) => {
     const proyectoIndex = proyectos.findIndex(proyecto => proyecto.id_proyecto === id_proyecto);
     if (proyectoIndex !== -1) {
         proyectos[proyectoIndex] = { ...proyectos[proyectoIndex], nombre_proyecto: nuevoNombre, fecha_inicio: nuevaFechaInicio, fecha_fin: nuevaFechaFin };
@@ -26,7 +24,7 @@ export function editarProyecto(id_proyecto, nuevoNombre, nuevaFechaInicio, nueva
 }
 
 // Función para eliminar un proyecto
-export function eliminarProyecto(id_proyecto) {
+export const eliminarProyecto = (id_proyecto) => {
     proyectos = proyectos.filter(proyecto => proyecto.id_proyecto !== id_proyecto);
     localStorage.setItem('proyectos', JSON.stringify(proyectos));
 }

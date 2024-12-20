@@ -241,4 +241,217 @@ document.getElementById('editarEmpleado').addEventListener('click', cargarFormul
 
 //------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------
+//FUNCIONES DE PROYECTOS
+// Función para generar el formulario de Crear Proyecto
+const generarFormularioCrearProyecto = () => {
+    
 
+    const formulario = `
+        <h2>Crear Proyecto</h2>
+        <form id="formCrearProyecto">
+            <label for="nombreProyecto">Nombre del Proyecto:</label>
+            <input type="text" id="nombreProyecto" required>
+
+            <label for="fechaInicio">Fecha de Inicio:</label>
+            <input type="date" id="fechaInicio" required>
+
+            <label for="fechaFin">Fecha de Fin:</label>
+            <input type="date" id="fechaFin" required>
+
+            <button type="submit">Crear Proyecto</button>
+        </form>
+    `;
+
+    // Insertar el formulario dentro de un contenedor específico
+    document.querySelector('main').innerHTML = formulario;
+    
+
+    // Asignar el evento de submit para crear el proyecto
+    document.getElementById('formCrearProyecto').addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const nombreProyecto = document.getElementById('nombreProyecto').value;
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFin = document.getElementById('fechaFin').value;
+
+        if (nombreProyecto && fechaInicio && fechaFin) {
+            // Llamar a la función para agregar un proyecto
+            agregarProyecto(nombreProyecto, fechaInicio, fechaFin);
+
+            // Mostrar mensaje de éxito
+            alert("Proyecto creado correctamente.");
+
+            // Limpiar los campos del formulario pero mantener el formulario visible
+            document.getElementById('nombreProyecto').value = '';
+            document.getElementById('fechaInicio').value = '';
+            document.getElementById('fechaFin').value = '';
+        } else {
+            alert("Por favor, completa todos los campos.");
+        }
+    });
+};
+
+// Evento para el botón de "Crear Proyecto"
+document.getElementById('crearProyecto').addEventListener('click', generarFormularioCrearProyecto);
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+//Funcion de Ver Proyectos
+const mostrarProyectos = () => {
+    limpiarMain(); // Limpiar el contenido de main antes de mostrar los proyectos
+    
+    const proyectos = obtenerProyectos(); // Obtener todos los proyectos
+    const contenedorProyectos = document.createElement('div');
+    
+    // Si no hay proyectos registrados, mostrar un mensaje
+    if (proyectos.length === 0) {
+        contenedorProyectos.innerHTML = '<p>No hay proyectos registrados.</p>';
+    } else {
+        const listaProyectos = document.createElement('ul');
+        
+        // Recorrer cada proyecto y agregarlo a la lista
+        proyectos.forEach(proyecto => {
+            const proyectoElemento = document.createElement('li');
+            proyectoElemento.textContent = `ID: ${proyecto.id_proyecto}, Nombre: ${proyecto.nombre_proyecto}, Fecha Inicio: ${proyecto.fecha_inicio}, Fecha Fin: ${proyecto.fecha_fin}`;
+            listaProyectos.appendChild(proyectoElemento);
+        });
+        
+        contenedorProyectos.appendChild(listaProyectos);
+    }
+
+    // Insertar el contenedor de proyectos en el main
+    document.querySelector('main').appendChild(contenedorProyectos);
+};
+// Evento para mostrar los proyectos cuando se haga clic en "Ver Proyectos"
+document.getElementById('verProyectos').addEventListener('click', mostrarProyectos);
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+//Funcion editar Proyecto
+const generarFormularioEditarProyecto = () => {
+    limpiarMain();  // Limpiar el contenido del main antes de mostrar el formulario de edición
+
+    const formulario = `
+        <h2>Editar Proyecto</h2>
+        <form id="formEditarProyecto">
+            <label for="idProyecto">ID del Proyecto:</label>
+            <input type="number" id="idProyecto" required placeholder="Ingrese el ID del proyecto a editar">
+
+            <button type="button" id="validarProyecto">Validar</button>
+
+            <div id="formularioProyecto" style="display: none;">
+                <label for="nuevoNombreProyecto">Nuevo Nombre del Proyecto:</label>
+                <input type="text" id="nuevoNombreProyecto">
+
+                <label for="nuevaFechaInicio">Nueva Fecha de Inicio:</label>
+                <input type="date" id="nuevaFechaInicio">
+
+                <label for="nuevaFechaFin">Nueva Fecha de Fin:</label>
+                <input type="date" id="nuevaFechaFin">
+
+                <button type="submit">Guardar Cambios</button>
+            </div>
+
+            <div id="mensajeExito" style="display: none; color: green;">
+                <p>Proyecto editado correctamente</p>
+            </div>
+        </form>
+    `;
+
+    // Insertar el formulario en el main
+    document.querySelector('main').innerHTML = formulario;
+
+    // Asignar evento para el botón de validación (verificar si el proyecto existe)
+    document.getElementById('validarProyecto').addEventListener('click', () => {
+        const id_proyecto = parseInt(document.getElementById('idProyecto').value);
+        const proyectos = obtenerProyectos();
+        const proyecto = proyectos.find(proyecto => proyecto.id_proyecto === id_proyecto);
+
+        if (proyecto) {
+            // Si el proyecto existe, mostrar el resto del formulario con los datos del proyecto
+            document.getElementById('formularioProyecto').style.display = 'block';
+            document.getElementById('nuevoNombreProyecto').value = proyecto.nombre_proyecto;
+            document.getElementById('nuevaFechaInicio').value = proyecto.fecha_inicio;
+            document.getElementById('nuevaFechaFin').value = proyecto.fecha_fin;
+
+            // Guardar el ID del proyecto en el formulario
+            document.getElementById('formEditarProyecto').setAttribute('data-id-proyecto', id_proyecto);
+        } else {
+            // Si no existe, mostrar mensaje de error
+            alert('Proyecto no encontrado');
+            document.getElementById('formularioProyecto').style.display = 'none';
+        }
+    });
+
+    // Asignar evento para guardar los cambios del proyecto
+    document.getElementById('formEditarProyecto').addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const id_proyecto = parseInt(document.getElementById('formEditarProyecto').getAttribute('data-id-proyecto'));
+        const nuevoNombreProyecto = document.getElementById('nuevoNombreProyecto').value;
+        const nuevaFechaInicio = document.getElementById('nuevaFechaInicio').value;
+        const nuevaFechaFin = document.getElementById('nuevaFechaFin').value;
+
+        // Llamar a la función para editar el proyecto
+        editarProyecto(id_proyecto, nuevoNombreProyecto, nuevaFechaInicio, nuevaFechaFin);
+
+        // Mostrar mensaje de éxito
+        document.getElementById('mensajeExito').style.display = 'block';
+
+        // Limpiar el formulario después de guardar, pero mantener el campo de ID para validación
+        document.getElementById('formularioProyecto').style.display = 'none';
+    });
+};
+
+// Evento para el botón de "Editar Proyecto"
+document.getElementById('editarProyecto').addEventListener('click', generarFormularioEditarProyecto);
+//------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------
+//Funcion elilminar Proyecto
+const generarFormularioEliminarProyecto = () => {
+    limpiarMain(); // Limpiar el contenido del main antes de mostrar el formulario de eliminación
+
+    const formulario = `
+        <h2>Eliminar Proyecto</h2>
+        <form id="formEliminarProyecto">
+            <label for="idProyectoEliminar">ID del Proyecto a Eliminar:</label>
+            <input type="number" id="idProyectoEliminar" required placeholder="Ingrese el ID del proyecto a eliminar">
+
+            <button type="submit">Eliminar Proyecto</button>
+        </form>
+
+        <div id="mensajeExitoEliminar" style="display: none; color: red;">
+            <p>Proyecto eliminado correctamente</p>
+        </div>
+
+        <div id="mensajeErrorEliminar" style="display: none; color: red;">
+            <p>Proyecto no encontrado</p>
+        </div>
+    `;
+
+    // Insertar el formulario en el main
+    document.querySelector('main').innerHTML = formulario;
+
+    // Asignar evento para el formulario de eliminar proyecto
+    document.getElementById('formEliminarProyecto').addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const id_proyectoEliminar = parseInt(document.getElementById('idProyectoEliminar').value);
+        const proyectos = obtenerProyectos();
+        const proyectoExistente = proyectos.find(proyecto => proyecto.id_proyecto === id_proyectoEliminar);
+
+        if (proyectoExistente) {
+            // Llamar a la función para eliminar el proyecto
+            eliminarProyecto(id_proyectoEliminar);
+
+            // Mostrar mensaje de éxito y ocultar mensaje de error
+            document.getElementById('mensajeExitoEliminar').style.display = 'block';
+            document.getElementById('mensajeErrorEliminar').style.display = 'none';
+        } else {
+            // Si el proyecto no existe, mostrar mensaje de error
+            document.getElementById('mensajeErrorEliminar').style.display = 'block';
+            document.getElementById('mensajeExitoEliminar').style.display = 'none';
+        }
+    });
+};
+
+// Evento para el botón de "Eliminar Proyecto"
+document.getElementById('eliminarProyecto').addEventListener('click', generarFormularioEliminarProyecto);
