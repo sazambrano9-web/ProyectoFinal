@@ -871,11 +871,6 @@ const generarFormularioAsignarProyecto = () => {
 
 
 // Llamamos a la función para generar el formulario cuando el botón de asignar se haga clic
-document.getElementById('asignacion').addEventListener('click', generarFormularioAsignarProyecto);
-//---=mostrar informacion de grupo
-
-// Llamar a la función cuando se haga clic en el botón de asignar
-document.getElementById('asignacion').addEventListener('click', generarFormularioAsignarProyecto);
 
 
 //--------------------------------------------------------
